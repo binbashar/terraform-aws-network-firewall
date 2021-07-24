@@ -53,7 +53,6 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
 # Stateless rule groups
 resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 
-
   for_each = var.stateless_rule_groups
 
   name        = each.key
@@ -100,11 +99,14 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
                     to_port   = lookup(destination_port.value, "to_port", null)
                   }
                 }
-                # TCP flags
-                #tcp_flag {
-                #  flags = lookup(destination.value, "flags")
-                #  masks = lookup(destination.value, "masks")
-                #}
+                # TCP flag
+                dynamic "tcp_flag" {
+                  for_each = lookup(stateless_rule.value, "tcp_flag", null) == null ? [] : [lookup(stateless_rule.value, "tcp_flag")]
+                  content {
+                    flags = lookup(tcp_flag.value, "flags", null)
+                    masks = lookup(tcp_flag.value, "masks", null)
+                  }
+                }
               }
             }
           }
