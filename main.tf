@@ -26,7 +26,7 @@ resource "aws_networkfirewall_firewall" "firewall" {
 resource "aws_networkfirewall_firewall_policy" "policy" {
 
   count = var.enabled ? 1 : 0
-  name  = "${var.name}-firewall-policy"
+  name  = var.firewall_policy_name == null ? "${var.name}-firewall-policy" : var.firewall_policy_name
 
   firewall_policy {
     stateless_default_actions          = var.stateless_default_actions

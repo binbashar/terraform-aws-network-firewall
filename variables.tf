@@ -43,6 +43,16 @@ variable "subnet_mapping" {
   description = "Subnets map. Each subnet must belong to a different Availability Zone in the VPC. AWS Network Firewall creates a firewall endpoint in each subnet."
 }
 
+# firewall policy
+variable "firewall_policy_name" {
+  type        = string
+  description = " A friendly name of the firewall policy."
+  default     = null
+}
+
+
+
+# Rule group
 variable "stateless_rule_groups" {
   type        = map(any)
   description = "Map of stateless rules groups."
@@ -66,6 +76,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
-
-
