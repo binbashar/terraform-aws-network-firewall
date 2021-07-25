@@ -118,3 +118,35 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
   tags = var.tags
 }
 
+# Stateful rule groups
+resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
+  for_each = var.stateful_rule_groups
+
+  name        = each.key
+  description = lookup(each.value, "description")
+  capacity    = lookup(each.value, "capacity", 100)
+  type        = "STATEFUL"
+  rule_group {
+    #    rule_variables {
+    #      ip_sets {
+    #        key = "HOME_NET"
+    #        ip_set {
+    #          definition = ["0.0.0.0/0"]
+    #        }
+    #      }
+    #    }
+    rules_source {
+      dynamic "rules_source_list" {
+        for_each = lookup(each.value, "rules_source_list", [])
+        content {
+          generated_rules_type = lookup(rules_source_list.value, "generated_rules_type")
+          target_types         = lookup(rules_source_list.value, "target_types")
+          targets              = lookup(rules_source_list.value, "targets")
+        }
+      }
+    }
+  }
+
+  tags = var.tags
+}
+
