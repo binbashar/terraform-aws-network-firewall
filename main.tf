@@ -26,12 +26,14 @@ resource "aws_networkfirewall_firewall" "firewall" {
 resource "aws_networkfirewall_firewall_policy" "policy" {
 
   count = var.enabled ? 1 : 0
-  name  = var.firewall_policy_name == null ? "${var.name}-firewall-policy" : var.firewall_policy_name
+
+  name = var.firewall_policy_name == null ? "${var.name}-firewall-policy" : var.firewall_policy_name
 
   firewall_policy {
     stateless_default_actions          = var.stateless_default_actions
     stateless_fragment_default_actions = var.stateless_fragment_default_actions
 
+    # Stateless rule group reference
     dynamic "stateless_rule_group_reference" {
       for_each = var.stateless_rule_groups
       content {
@@ -40,9 +42,13 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
       }
     }
 
-    #    stateful_rule_group_reference {
-    #  resource_arn = aws_networkfirewall_rule_group.staleful_rule_group[0].arn
-    #}
+    # Stateful rule group reference
+    dynamic "stateful_rule_group_reference" {
+      for_each = var.stateful_rule_groups
+      content {
+        resource_arn = aws_networkfirewall_rule_group.staleful_rule_group[stateful_rule_group_reference.key].arn
+      }
+    }
   }
 
   tags = var.tags
@@ -53,7 +59,7 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
 # Stateless rule groups
 resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 
-  for_each = var.stateless_rule_groups
+  for_each = var.enabled ? var.stateless_rule_groups : {}
 
   name        = each.key
   description = lookup(each.value, "description")
@@ -120,24 +126,43 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 
 # Stateful rule groups
 resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
-  for_each = var.stateful_rule_groups
+
+  for_each = var.enabled ? var.stateful_rule_groups : {}
 
   name        = each.key
   description = lookup(each.value, "description")
   capacity    = lookup(each.value, "capacity", 100)
   type        = "STATEFUL"
   rule_group {
-    #    rule_variables {
-    #      ip_sets {
-    #        key = "HOME_NET"
-    #        ip_set {
-    #          definition = ["0.0.0.0/0"]
-    #        }
-    #      }
-    #    }
+    # rule variables
+    dynamic "rule_variables" {
+      for_each = [lookup(each.value, "rule_variables", {})]
+      content {
+        # IP Sets
+        dynamic "ip_sets" {
+          for_each = lookup(rule_variables.value, "ip_sets", null) == null ? {} : lookup(rule_variables.value, "ip_sets")
+          content {
+            key = ip_sets.key
+            ip_set {
+              definition = ip_sets.value
+            }
+          }
+        }
+        # Port Sets
+        dynamic "port_sets" {
+          for_each = lookup(rule_variables.value, "port_sets", null) == null ? {} : lookup(rule_variables.value, "port_sets")
+          content {
+            key = port_sets.key
+            port_set {
+              definition = port_sets.value
+            }
+          }
+        }
+      }
+    }
     rules_source {
       dynamic "rules_source_list" {
-        for_each = lookup(each.value, "rules_source_list", [])
+        for_each = lookup(each.value, "rules_source_list", null) == null ? [] : [lookup(each.value, "rules_source_list")]
         content {
           generated_rules_type = lookup(rules_source_list.value, "generated_rules_type")
           target_types         = lookup(rules_source_list.value, "target_types")

@@ -76,6 +76,7 @@ variable "stateful_rule_groups" {
   default     = {}
 }
 
+# Tags
 variable "tags" {
   description = "Map of resource tags to associate with the resource. If configured with a provider default_tags configuration block present, tags with matching keys will overwrite those defined at the provider-level."
   type        = map(string)
