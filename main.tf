@@ -1,7 +1,7 @@
 # Firewall
 resource "aws_networkfirewall_firewall" "firewall" {
 
-  count = var.enabled ? 1 : 0
+  count = var.enabled && var.create_network_firewall ? 1 : 0
 
   name                              = var.name
   description                       = var.description
@@ -27,7 +27,7 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
 
   count = var.enabled ? 1 : 0
 
-  name = var.firewall_policy_name == null ? "${var.name}-firewall-policy" : var.firewall_policy_name
+  name = var.firewall_policy_name == null ? "${var.name}-policy" : var.firewall_policy_name
 
   firewall_policy {
     stateless_default_actions          = var.stateless_default_actions
@@ -59,7 +59,10 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
 # Stateless rule groups
 resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 
-  for_each = var.enabled ? var.stateless_rule_groups : {}
+  for_each = {
+    for k, v in var.stateless_rule_groups :
+    k => v if var.enabled
+  }
 
   name        = each.key
   description = lookup(each.value, "description")
@@ -127,7 +130,10 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 # Stateful rule groups
 resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
 
-  for_each = var.enabled ? var.stateful_rule_groups : {}
+  for_each = {
+    for k, v in var.stateful_rule_groups :
+    k => v if var.enabled
+  }
 
   name        = each.key
   description = lookup(each.value, "description")
@@ -136,7 +142,7 @@ resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
   rule_group {
     # rule variables
     dynamic "rule_variables" {
-      for_each = [lookup(each.value, "rule_variables", {})]
+      for_each = lookup(each.value, "rule_variables", null) == null ? [] : [lookup(each.value, "rule_variables", {})]
       content {
         # IP Sets
         dynamic "ip_sets" {
@@ -161,12 +167,39 @@ resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
       }
     }
     rules_source {
+      # Rules source lists
       dynamic "rules_source_list" {
         for_each = lookup(each.value, "rules_source_list", null) == null ? [] : [lookup(each.value, "rules_source_list")]
         content {
           generated_rules_type = lookup(rules_source_list.value, "generated_rules_type")
           target_types         = lookup(rules_source_list.value, "target_types")
           targets              = lookup(rules_source_list.value, "targets")
+        }
+      }
+
+      # Stateful rules
+      dynamic "stateful_rule" {
+        for_each = lookup(each.value, "stateful_rule", null) == null ? [] : [lookup(each.value, "stateful_rule")]
+        content {
+          action = lookup(stateful_rule.value, "action")
+          dynamic "header" {
+            for_each = [lookup(stateful_rule.value, "header", {})]
+            content {
+              destination      = lookup(header.value, "destination")
+              destination_port = lookup(header.value, "destination_port")
+              direction        = lookup(header.value, "direction")
+              protocol         = lookup(header.value, "protocol")
+              source           = lookup(header.value, "source")
+              source_port      = lookup(header.value, "source_port")
+            }
+          }
+          dynamic "rule_option" {
+            for_each = [lookup(stateful_rule.value, "rule_option", {})]
+            content {
+              keyword  = lookup(rule_option.value, "keyword")
+              settings = lookup(rule_option.value, "settings", [])
+            }
+          }
         }
       }
     }

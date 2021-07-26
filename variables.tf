@@ -38,6 +38,12 @@ variable "enabled" {
   default     = true
 }
 
+variable "create_network_firewall" {
+  description = "Set to false if you just want to create the security policy, stateless and stateful rules"
+  type        = bool
+  default     = true
+}
+
 variable "subnet_mapping" {
   type        = map(any)
   description = "Subnets map. Each subnet must belong to a different Availability Zone in the VPC. AWS Network Firewall creates a firewall endpoint in each subnet."
@@ -52,7 +58,7 @@ variable "firewall_policy_name" {
 
 # Stateless rule group
 variable "stateless_rule_groups" {
-  type        = map(any)
+  type        = any
   description = "Map of stateless rules groups."
   default     = {}
 }
@@ -71,7 +77,7 @@ variable "stateless_fragment_default_actions" {
 
 # Stateful rules
 variable "stateful_rule_groups" {
-  type        = map(any)
+  type        = any
   description = "Map of stateful rules groups."
   default     = {}
 }
