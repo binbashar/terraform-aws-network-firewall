@@ -72,6 +72,22 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
   rule_group {
     rules_source {
       stateless_rules_and_custom_actions {
+        # Customs actions
+        dynamic "custom_action" {
+          for_each = lookup(each.value, "custom_actions", {})
+          content {
+            action_name = custom_action.key
+            action_definition {
+              publish_metric_action {
+                dimension {
+                  value = custom_action.value
+                }
+              }
+            }
+          }
+        }
+
+        # Stateless rules
         dynamic "stateless_rule" {
           for_each = lookup(each.value, "rules", [])
           content {
