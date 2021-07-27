@@ -193,6 +193,9 @@ resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
         }
       }
 
+      # Rules strings
+      rules_string = lookup(each.value, "rules_string", null)
+
       # Stateful rules
       dynamic "stateful_rule" {
         for_each = lookup(each.value, "stateful_rule", null) == null ? [] : [lookup(each.value, "stateful_rule")]
