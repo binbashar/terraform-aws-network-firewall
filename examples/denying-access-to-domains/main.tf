@@ -4,12 +4,9 @@ module "firewall" {
 
   name        = "firewall"
   description = "AWS Network Firewall example"
-  vpc_id      = "vpc-12345678910111213"
 
-  subnet_mapping = {
-    us-east-1a = "subnet-23456780101112131"
-    us-east-1b = "subnet-13121110987654321"
-  }
+  vpc_id         = data.terraform_remote_state.inspection_vpc.outputs.vpc_id
+  subnet_mapping = data.terraform_remote_state.inspection_vpc.outputs.inspection_subnets
 
   # Stateless rule groups
   stateless_rule_groups = {
