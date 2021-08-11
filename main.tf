@@ -46,7 +46,7 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
     dynamic "stateful_rule_group_reference" {
       for_each = var.stateful_rule_groups
       content {
-        resource_arn = aws_networkfirewall_rule_group.staleful_rule_group[stateful_rule_group_reference.key].arn
+        resource_arn = aws_networkfirewall_rule_group.stateful_rule_group[stateful_rule_group_reference.key].arn
       }
     }
   }
@@ -144,7 +144,7 @@ resource "aws_networkfirewall_rule_group" "stateless_rule_group" {
 }
 
 # Stateful rule groups
-resource "aws_networkfirewall_rule_group" "staleful_rule_group" {
+resource "aws_networkfirewall_rule_group" "stateful_rule_group" {
 
   for_each = {
     for k, v in var.stateful_rule_groups :
