@@ -41,7 +41,7 @@ jobs:
             #
             # Install terraform-docs
             sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-            curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
+            curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.12.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
             chmod +x ./terraform-docs
             sudo mv ./terraform-docs /usr/local/bin/terraform-docs
             #
