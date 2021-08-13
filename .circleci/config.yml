@@ -5,8 +5,8 @@ jobs:
   # Automated Tests
   #
   test-static-code-and-linting:
-    machine:
-      image: ubuntu-1604:202007-01 # Ubuntu 16.04, Docker v19.03.12, Docker Compose v1.26.1
+    machine: # https://circleci.com/docs/2.0/configuration-reference/#available-machine-images
+      image: ubuntu-2004:202107-01 # Ubuntu 16.04, Docker v19.03.12, Docker Compose v1.26.1
 
       # This job has been blocked because Docker Layer Caching is not available on your plan.
       # Should upgrade if necessary.
@@ -30,7 +30,7 @@ jobs:
           command: |
             #
             # Install pre-commit
-            pip install pre-commit
+            sudo -H pip3 install pre-commit
             #
             # Install terraform
             sudo apt-get install unzip
@@ -41,7 +41,7 @@ jobs:
             #
             # Install terraform-docs
             sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-            curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
+            curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
             chmod +x ./terraform-docs
             sudo mv ./terraform-docs /usr/local/bin/terraform-docs
             #
@@ -50,7 +50,7 @@ jobs:
 
       - run:
           name: Install awscli
-          command: sudo -H pip install awscli
+          command: sudo -H pip3 install awscli
 
       - run:
           name: Configure awscli
@@ -170,7 +170,7 @@ jobs:
 
       - run:
           name: Install awscli
-          command: sudo pip install awscli
+          command: sudo -H pip3 install awscli
 
       - run:
           name: Configure awscli
