@@ -1,4 +1,6 @@
-module "firewall" {
+# terraform-aws-network-firewall complete example
+
+`module "firewall" {
 
   source = "../../"
 
@@ -144,4 +146,5 @@ module "firewall" {
       }
     }
   }
-}
+}``
+```
