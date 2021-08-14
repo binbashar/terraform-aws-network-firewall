@@ -31,8 +31,9 @@ data "terraform_remote_state" "inspection_vpc" {
 
   config = {
     region  = var.region
-    profile = "${var.project}-network-deploymaster"
-    bucket  = "${var.project}-network-terraform-backend"
-    key     = "network/network-firewall/terraform.tfstate"
+    profile = "${var.project}-dev-deploymaster"
+    #profile = "${var.project}-network-deploymaster"
+    bucket = "${var.project}-network-terraform-backend"
+    key    = "network/network-firewall/terraform.tfstate"
   }
 }
