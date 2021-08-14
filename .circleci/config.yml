@@ -70,8 +70,8 @@ jobs:
             # AWS network awscli profile
             #aws configure set role_arn arn:aws:iam::$AWS_ACCOUNT_ID_NETWORK:role/DeployMaster --profile $AWS_PROFILE_NAME
             #aws configure set source_profile default --profile $AWS_PROFILE_NAME
-            aws configure set role_arn arn:aws:iam::$AWS_ACCOUNT_ID_NETWORK:role/DeployMaster --profile bb-network-deploymaster
-            aws configure set source_profile default --profile bb-network-deploymaster
+            aws configure set role_arn arn:aws:iam::$AWS_ACCOUNT_ID_NETWORK:role/DeployMaster --profile bb-dev-deploymaster
+            aws configure set source_profile default --profile bb-dev-deploymaster
 
             # moving credentials to specific project folder
             cp /home/circleci/.aws/credentials /home/circleci/.aws/bb/credentials
