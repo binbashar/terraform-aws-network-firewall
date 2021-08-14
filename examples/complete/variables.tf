@@ -8,7 +8,7 @@ variable "region" {
 
 variable "profile" {
   description = "AWS Profile"
-  default     = "bb-network-deploymaster" # ci aws-iam-profile
+  default     = "bb-dev-deploymaster" # ci aws-iam-profile
 }
 
 #=============================#
