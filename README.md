@@ -6,7 +6,7 @@
   <img src="https://raw.githubusercontent.com/binbashar/terraform-aws-network-firewall/master/figures/binbash-leverage-terraform-logo.png"
   alt="leverage" width="130"/>
 </div>
-#terraform-aws-network-firewall
+# terraform-aws-network-firewall
 
 ## Overview
 
