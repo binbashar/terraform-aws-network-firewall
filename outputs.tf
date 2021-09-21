@@ -10,7 +10,7 @@ output "arn" {
 
 output "network_firewall_policy" {
   description = "The Firewall Network policy created"
-  value       = var.enabled && var.create_network_firewall ? aws_networkfirewall_firewall_policy.policy : {}
+  value       = var.enabled && var.create_network_firewall ? aws_networkfirewall_firewall_policy.policy : null
 
 }
 
