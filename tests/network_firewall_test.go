@@ -13,8 +13,8 @@ import (
 func TestTerraformNetworkFirewall(t *testing.T) {
 	t.Parallel()
 
-	expectedStatelessMap := map[string]string{"stateless-group-1": "100", }
-	expectedStatefulMap := map[string]string{"stateful-group-1": "Stateful Inspection for denying access to domains",  "stateful-group-2" : "Stateful Inspection for allowing access to domains", "stateful-group-3" : "Permits http traffic from source" }
+	expectedStatelessMap := map[string]string{"stateless-group-example-1": "100", }
+	expectedStatefulMap := map[string]string{"stateful-group-example-1": "Stateful Inspection for denying access to domains",  "stateful-group-example-2" : "Stateful Inspection for allowing access to domains", "stateful-group-example-3" : "Permits http traffic from source" }
 	minNumAzs := 1
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{

@@ -5,9 +5,10 @@ module "firewall" {
   enabled                 = true
   create_network_firewall = true # Set to false if you just want to create the security policy, stateless and stateful rules
 
-  name                              = "firewall"
+  name                              = "firewall-example"
   description                       = "AWS Network Firewall example"
   delete_protection                 = false
+  firewall_policy_name              = "firewall-policy-example"
   firewall_policy_change_protection = false
   subnet_change_protection          = false
 
@@ -18,7 +19,7 @@ module "firewall" {
 
   # Stateless rule groups
   stateless_rule_groups = {
-    stateless-group-1 = {
+    stateless-group-example-1 = {
       description = "Stateless rules"
       priority    = 1
       capacity    = 100
@@ -95,7 +96,7 @@ module "firewall" {
   # Stateful rules
   stateful_rule_groups = {
     # rules_source_list examples
-    stateful-group-1 = {
+    stateful-group-example-1 = {
       description = "Stateful Inspection for denying access to domains"
       capacity    = 100
       #rule_variables = {}
@@ -105,7 +106,7 @@ module "firewall" {
         targets              = [".archive.org", ".badsite.com"]
       }
     }
-    stateful-group-2 = {
+    stateful-group-example-2 = {
       description = "Stateful Inspection for allowing access to domains"
       capacity    = 100
       rule_variables = {
@@ -125,7 +126,7 @@ module "firewall" {
       }
     }
     # stateful_rule examples
-    stateful-group-3 = {
+    stateful-group-example-3 = {
       description = "Permits http traffic from source"
       capacity    = 50
       stateful_rule = {
