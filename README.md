@@ -67,6 +67,7 @@ No modules.
 |------|-------------|
 | <a name="output_arn"></a> [arn](#output\_arn) | The Amazon Resource Name (ARN) that identifies the firewall. |
 | <a name="output_id"></a> [id](#output\_id) | The ID that identifies the firewall. |
+| <a name="output_network_firewall_policy"></a> [network\_firewall\_policy](#output\_network\_firewall\_policy) | The Firewall Network policy created |
 | <a name="output_network_firewall_stateful_group"></a> [network\_firewall\_stateful\_group](#output\_network\_firewall\_stateful\_group) | Map of stateful group rules |
 | <a name="output_network_firewall_stateless_group"></a> [network\_firewall\_stateless\_group](#output\_network\_firewall\_stateless\_group) | Map of stateless group rules |
 | <a name="output_network_firewall_status"></a> [network\_firewall\_status](#output\_network\_firewall\_status) | Nested list of information about the current status of the firewall. |

@@ -8,6 +8,12 @@ output "arn" {
   value       = var.enabled && var.create_network_firewall ? aws_networkfirewall_firewall.firewall[0].id : null
 }
 
+output "network_firewall_policy" {
+  description = "The Firewall Network policy created"
+  value       = var.enabled && var.create_network_firewall ? aws_networkfirewall_firewall_policy.policy : {}
+
+}
+
 output "network_firewall_status" {
   description = "Nested list of information about the current status of the firewall."
   value       = var.enabled && var.create_network_firewall ? aws_networkfirewall_firewall.firewall[0].firewall_status : []
