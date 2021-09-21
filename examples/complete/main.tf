@@ -5,9 +5,10 @@ module "firewall" {
   enabled                 = true
   create_network_firewall = true # Set to false if you just want to create the security policy, stateless and stateful rules
 
-  name                              = "firewall"
+  name                              = "firewall-example"
   description                       = "AWS Network Firewall example"
   delete_protection                 = false
+  firewall_policy_name              = "firewall-policy-example"
   firewall_policy_change_protection = false
   subnet_change_protection          = false
 
