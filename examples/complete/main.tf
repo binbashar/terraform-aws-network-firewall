@@ -17,6 +17,18 @@ module "firewall" {
   vpc_id         = data.terraform_remote_state.inspection_vpc.outputs.vpc_id
   subnet_mapping = data.terraform_remote_state.inspection_vpc.outputs.inspection_subnets
 
+  stateless_default_actions          = ["aws:forward_to_sfe"]
+  stateless_fragment_default_actions = ["aws:drop"]
+
+  home_net_cidr = local.home_net_cidr
+
+  stateful_suricata_rule_groups = local.suricata_rules
+
+  managed_rule_groups = local.managed_rule_groups
+
+  rule_order = "STRICT_ORDER"
+  stream_exception_policy = "REJECT"
+
   # Stateless rule groups
   stateless_rule_groups = {
     stateless-group-example-1 = {
