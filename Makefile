@@ -22,4 +22,3 @@ init-makefiles: ## initialize makefiles
 -include ${MAKEFILES_DIR}/release-mgmt/release.mk
 -include ${MAKEFILES_DIR}/terraform1/terraform1-root-context.mk
 -include ${MAKEFILES_DIR}/terraform1/terraform1.mk
--include ${MAKEFILES_DIR}/terratest1/terratest1.mk
