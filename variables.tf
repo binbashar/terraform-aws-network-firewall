@@ -135,3 +135,45 @@ variable "stream_exception_policy" {
   type        = string
   default     = "DROP"
 }
+
+variable "enable_firewall_logs" {
+  type    = bool
+  default = false
+  description = "Enable logging for the firewall"
+}
+
+variable "log_destination_type" {
+  type    = string
+  default = "CLOUDWATCHLOGS"
+  description = "Log destination type. Options: CLOUDWATCHLOGS, S3, KinesisDataFirehose"
+}
+
+variable "log_type" {
+  type    = list(string)
+  default = ["FLOW", "ALERT"]
+  description = "Log types to enable. Options: FLOW, ALERT"
+}
+
+variable "cloudwatch_log_group_name" {
+  type    = string
+  default = null
+  description = "CloudWatch log group name"
+}
+
+variable "s3_bucket_name" {
+  type    = string
+  default = null
+  description = "S3 bucket name"
+}
+
+variable "kinesis_stream_arn" {
+  type    = string
+  default = null
+  description = "Amazon Resource Name (ARN) of the Kinesis Data Firehose stream"
+}
+
+variable "log_retention_in_days" {
+  type    = number
+  default = 90
+  description = "The number of days to retain log events in the log group"
+}

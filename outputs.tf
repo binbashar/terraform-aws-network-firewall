@@ -28,3 +28,8 @@ output "network_firewall_stateful_group" {
   description = "Map of stateful group rules"
   value       = var.enabled ? aws_networkfirewall_rule_group.stateful_rule_group : null
 }
+
+output "network_firewall_suricata_rule_groups" {
+  description = "Map of Suricata rule groups"
+  value       = var.enabled ? aws_networkfirewall_rule_group.stateful_suricata_rule_group : null
+}

@@ -29,6 +29,12 @@ module "firewall" {
   rule_order = "STRICT_ORDER"
   stream_exception_policy = "REJECT"
 
+  enable_firewall_logs        = true
+  log_destination_type        = "CLOUDWATCHLOGS"
+  cloudwatch_log_group_name   = "/aws/network-firewall/"
+  log_type                    = ["FLOW", "ALERT"]
+  log_retention_in_days       = 365
+
   # Stateless rule groups
   stateless_rule_groups = {
     stateless-group-example-1 = {

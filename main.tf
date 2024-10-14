@@ -609,3 +609,64 @@ resource "aws_networkfirewall_rule_group" "stateful_suricata_rule_group" {
 
   tags = var.tags
 }
+
+resource "aws_networkfirewall_logging_configuration" "logging_cloudwatch" {
+  count = var.log_destination_type == "CLOUDWATCH_LOGS" && var.enable_firewall_logs ? 1 : 0
+  firewall_arn = aws_networkfirewall_firewall.firewall[0].arn
+
+logging_configuration {
+  dynamic "log_destination_config" {
+    for_each = toset(var.log_type)
+    content {
+      log_destination_type = var.log_destination_type
+      log_type = log_destination_config.value
+      log_destination = {
+        logGroup = "${var.cloudwatch_log_group_name}-${log_destination_config.value}"
+      }
+      }
+    }
+  }
+}
+
+resource "aws_cloudwatch_log_group" "firewall_logs" {
+  count = var.log_destination_type == "CLOUDWATCHLOGS" && var.enable_firewall_logs ? 1 : 0
+  name  = var.cloudwatch_log_group_name
+  retention_in_days = var.log_retention_in_days
+}
+
+resource "aws_networkfirewall_logging_configuration" "logging_s3" {
+  count = var.log_destination_type == "S3" && var.enable_firewall_logs ? 1 : 0
+  firewall_arn = aws_networkfirewall_firewall.firewall[0].arn
+
+  logging_configuration {
+    dynamic "log_destination_config" {
+    for_each = toset(var.log_type)
+    content {
+      log_destination_type = var.log_destination_type
+      log_type = log_destination_config.value
+      log_destination = {
+        bucketName = var.s3_bucket_name
+        prefix = "firewall-logs-${log_destination_config.value}"
+      }
+      }
+    }
+  }
+}
+
+resource "aws_networkfirewall_logging_configuration" "logging_kinesis" {
+  count = var.log_destination_type == "KINESISDATAFIREHOSE" && var.enable_firewall_logs ? 1 : 0
+  firewall_arn = aws_networkfirewall_firewall.firewall[0].arn
+
+  logging_configuration {
+    dynamic "log_destination_config" {
+    for_each = toset(var.log_type)
+    content {
+      log_destination_type = var.log_destination_type
+      log_type = log_destination_config.value
+      log_destination = {
+        deliveryStream = var.kinesis_stream_arn
+      }
+      }
+    }
+  }
+}
